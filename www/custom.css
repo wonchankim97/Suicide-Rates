@@ -1,5 +1,27 @@
+/* .main-sidebar {
+	font-family: "Avenir";
+	font-size: 20px;
+	line-height: 1.2;
+	font-variant-position: sub;
+
+} */
+
+/* .sidebar {
+	color: #FFF;
+	position: fixed;
+	width: 220px;
+	white-space: nowrap;
+	overflow: visible;
+  }
+
+/* header title font */
+
 .main-header .logo {
-  font-family: "Avenir";
-  font-weight: bold;
-  font-size: 24px;
+    font-family: "Avenir";
+    font-size: 24px;
+} */
+
+body {
+	font-family: "Avenir";
+	font-size: 16px;
 }
