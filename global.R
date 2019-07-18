@@ -1,1 +1,29 @@
-suicide_rates <- read.csv(file = "../suicide_rates/suicide_rates.csv")
+suicide_rates <- read_csv(file = "../suicide_rates/suicide_rates.csv")
+df  =
+  suicide_rates %>%
+  select(-`country-year`) %>% 
+  rename(suicides.per.100k = `suicides/100k pop`,
+         hdi = `HDI for year`,
+         gdp.capita = `gdp_per_capita ($)`,
+         gdp.year = `gdp_for_year ($)`,
+         suicides = suicides_no)
+df = df %>% 
+  mutate(continent = countrycode(sourcevar = df$country,
+                            origin = "country.name",
+                            destination = "continent"))
+aggdf = df %>% 
+  group_by(country) %>% 
+  summarise(suicides = sum(suicides))
+
+choice =
+  df %>%
+  select(country) %>%
+  unique()
+
+check = 
+  df %>% 
+  select(age) %>% 
+  unique()
+
+check[[1]]
+

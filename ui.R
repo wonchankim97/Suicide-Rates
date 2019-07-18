@@ -30,13 +30,31 @@ shinyUI(
           menuItem(text = 'Graphs', icon = icon('chart-bar'), tabName = 'graphs'),
           menuItem(text = 'Machine Learning', icon = icon('laptop-code'), tabName = 'kmeans'),
           menuItem(text = 'Data', icon = icon('database'), tabName = 'data')
-          # menuItem()
         )
       ),
       dashboardBody(
         tags$head(
           tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
         ),
+        
+        tabItems(
+          tabItem(tabName = "maps",
+                  fluidRow(infoBoxOutput("maxBox"),
+                           infoBoxOutput("minBox"),
+                           infoBoxOutput("avgBox")),
+                  fluidRow(
+                    column(9, box(htmlOutput("map"), height = 500,width=1000)),
+                    column(3,
+                      checkboxGroupInput("checkGroup", label = h3("Filter by age group: "),
+                                                  choices = check[[1]],
+                                                  selected = check[[1]])
+                      
+                    )
+                  )
+          ),
+          tabItem(tabName = "data",
+                  fluidRow(box(DT::dataTableOutput("table"), width = 12)))
+        )
         
         # optional element of allowing user to download data
         # fluidRow(
@@ -46,7 +64,6 @@ shinyUI(
         #   column(12, DT::dataTableOutput("campaign_table", width = "100%"))
         # )
         
-        fluidRow()
       )
     )
   )
