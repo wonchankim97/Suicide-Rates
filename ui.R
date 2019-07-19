@@ -39,13 +39,11 @@ shinyUI(
         
         tabItems(
           tabItem(tabName = "maps",
-                  fluidRow(
-                    infoBox("2018 Average US Suicide Rate (/100k): ", 13.9,
-                            icon = icon("globe-americas"), fill = TRUE, width = 12,
-                            href = "https://www.americashealthrankings.org/explore/annual/measure/Suicide/state/ALL")),
                   fluidRow(infoBoxOutput("maxBox"),
-                           infoBoxOutput("minBox"),
-                           infoBoxOutput("avgBox")),
+                           infoBoxOutput("avgBox"),
+                           infoBox("Average US Suicides", subtitle = "in 2018 (/100k)", 13.9,
+                                   icon = icon("globe-americas"), fill = TRUE,
+                                   href = "https://www.americashealthrankings.org/explore/annual/measure/Suicide/state/ALL", color = "light-blue")),
                   fluidRow(
                     column(9, box(htmlOutput("map"), height = "auto", width = "auto")),
                     column(3,
@@ -54,15 +52,14 @@ shinyUI(
                                                   "25-34" = "25-34 years", "35-54" = "35-54 years",
                                                   "55-74" = "55-74 years", "75+" = "75+ years"),
                                    selected = c("5-14 years", "15-24 years", "25-34 years",
-                                                "35-54 years", "55-74 years","75+ years"))
+                                                "35-54 years", "55-74 years","75+ years")),
+                      sliderInput("slider", label = h3("Year Range"), min = 1985, 
+                                  max = 2016, value = c(1985, 2016), sep = "")
+                      
                     )
                   ),
                   fluidRow(
-                    column(9,
-                           sliderInput("slider", label = h3("Year Range"), min = 1985, 
-                                       max = 2016, value = c(1985, 2016), sep = "")
-                    ),
-                    column(3)
+                    infoBoxOutput("minBox", width = 12)
                   )
           ),
           tabItem(tabName = "graphs",

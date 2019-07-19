@@ -12,21 +12,24 @@ shinyServer(function(input, output){
   ## Filter
   df1 <- reactive({
     if(is.null(input$checkGroup))
-      df1 = df
+      df1 = df %>% 
+        group_by(country, age) %>%
+        summarise(suicides100 = round(mean(suicides.per.100k)),
+                  suicides = round(mean(suicides)))
     else{
       df1 = df %>%
-      filter(age %in% input$checkGroup) %>%
-      filter(year %in% input$slider) %>% 
-      group_by(country, age) %>%
-      summarise(suicides100 = round(mean(suicides.per.100k)),
-                suicides = round(mean(suicides)))
+        filter(age %in% input$checkGroup) %>%
+        filter(year %in% input$slider) %>% 
+        group_by(country, age) %>%
+        summarise(suicides100 = round(mean(suicides.per.100k)),
+                  suicides = round(mean(suicides)))
     }
   })
   
   ## Render Map
   # show map using googleVis
   output$map <-renderGvis({
-    gvisGeoChart(data = df1(), locationvar = "country", colorvar = "suicides",
+    gvisGeoChart(data = df1(), locationvar = "country", colorvar = "suicides100",
                  options=list(region="world", displayMode="auto",
                               resolution="countries", width="100%", height="100%"))
   })
@@ -35,20 +38,18 @@ shinyServer(function(input, output){
     max_value <- max(df1()$suicides100)
     max_state <-
       df1()$country[df1()$suicides100 == max_value]
-      # df1()$country[df()[,input$suicides100] == max_value]
-    infoBox(max_state, max_value, icon = icon("hand-o-up"))
-  })
-  output$minBox <- renderInfoBox({
-    min_value <- min(df1()$suicides100)
-    min_state <-
-      df1()$country[df1()$suicides100 == min_value]
-    infoBox(min_state, min_value, icon = icon("hand-o-up"))
+    infoBox(max_state, max_value, icon = icon("hand-o-up"), color = "light-blue")
   })
   output$avgBox <- renderInfoBox({
-    avg_value <- mean(df1()$suicides100)
-    avg_state <-
-      df1()$country[df1()$suicides100 == avg_value]
-    infoBox(avg_state, avg_value, icon = icon("calculator"))
+    avg_value <- round(mean(df1()$suicides100), 2)
+    infoBox("Average Global Suicides: ", avg_value, icon = icon("calculator"), color = "light-blue")
+  })
+  output$minBox <- renderInfoBox({
+    min_state <-
+      df1()$country[df1()$suicides100 == 0]
+    min_state = paste(min_state, collapse = ", ")
+    infoBox(min_state, title = "Countries w/ 0 Suicides (/100k): ",
+            icon = icon("user-times"), color = "navy")
   })
   
   #### Graphs Tab ######################################################

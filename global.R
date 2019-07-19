@@ -11,19 +11,7 @@ df = df %>%
   mutate(continent = countrycode(sourcevar = df$country,
                             origin = "country.name",
                             destination = "continent"))
-aggdf = df %>% 
-  group_by(country) %>% 
-  summarise(suicides = sum(suicides))
 
-choice =
-  df %>%
-  select(country) %>%
-  unique()
-
-check = 
-  df %>% 
-  select(age) %>% 
-  unique()
 
 us = df %>% filter(country == 'United States')
 eu = df %>% filter(continent == "Europe")

@@ -19,9 +19,19 @@
 .main-header .logo {
     font-family: "Avenir";
     font-size: 24px;
-} */
+}
 
-body {
+.body {
 	font-family: "Avenir";
 	font-size: 16px;
+}
+
+.content-wrapper, .right-side {
+	font-family: "Avenir";
+	font-size: 16px;
+}
+
+.infobox {
+    font-family: "Avenir";
+	font-size: 30em;
 }
