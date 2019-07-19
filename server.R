@@ -58,9 +58,16 @@ shinyServer(function(input, output){
   #### Graphs Tab ######################################################
   ## Graphs and Histograms
   output$bar <- renderPlot({
-    gvisColumnChart(data = df1(), xvar = , yvar = , )
+    gvisColumnChart(suicide_rates, xvar = suicides100, yvar = gdp.capita)
   })
-  
+  # ## Example
+  # 
+  # # Column <- gvisColumnChart(df)
+  # # plot(Column)
+  # # 
+  # # df=data.frame(country=c("US", "GB", "BR"),
+  # #               val1=c(10,13,14),
+  # #               val2=c(23,12,32))
   output$line <- renderPlot({
     gvisLineChart(df1(), xvar="country", yvar=c("suicides100","suicides"),
                   options=list(

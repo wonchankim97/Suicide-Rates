@@ -63,6 +63,25 @@ shinyUI(
                   )
           ),
           tabItem(tabName = "graphs",
+                  fluidRow(h1("Customize graphs using the following conditions:"), align = "center"),
+                  fluidRow(
+                    column(3,
+                      selectInput("cont", label = h3("Continent"), 
+                                  choices = list("All" = "", "Choice 2" = 2, "Choice 3" = 3), 
+                                  selected = 1)),
+                    column(3,
+                      selectInput("suic", label = h3("Number of Suicides (/100k)"), 
+                                  choices = list("All" = "", "Choice 2" = 2, "Choice 3" = 3), 
+                                  selected = 1)),
+                    column(3,
+                      selectInput("gdp", label = h3("GDP per Capita"), 
+                                  choices = list("All" = "", "Choice 2" = 2, "Choice 3" = 3), 
+                                  selected = 1)),
+                    column(3,
+                      sliderInput("sliderg", label = h3("Year Range"), min = 1985, 
+                                  max = 2016, value = c(1985, 2016), sep = ""))
+                    
+                  ),
                   fluidRow(
                     box(htmlOutput("bar"), height = 300),
                     box(htmlOutput("hist"), height = 300)
