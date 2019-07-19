@@ -1,7 +1,6 @@
 library(shinydashboard)
 library(tidyverse)
 library(googleVis)
-library(leaflet)
 library(maps)
 library(countrycode)
 
@@ -11,11 +10,13 @@ shinyServer(function(input, output){
   #### Map Tab #########################################################
   ## Filter
   df1 <- reactive({
-    if(is.null(input$checkGroup))
+    if(is.null(input$checkGroup)){
       df1 = df %>% 
+        filter(year %in% input$slider) %>%
         group_by(country, age) %>%
         summarise(suicides100 = round(mean(suicides.per.100k)),
                   suicides = round(mean(suicides)))
+    }
     else{
       df1 = df %>%
         filter(age %in% input$checkGroup) %>%
@@ -26,11 +27,12 @@ shinyServer(function(input, output){
     }
   })
   
+  
   ## Render Map
   # show map using googleVis
   output$map <-renderGvis({
     gvisGeoChart(data = df1(), locationvar = "country", colorvar = "suicides100",
-                 options=list(region="world", displayMode="auto",
+                 options = list(region="world", displayMode="auto",
                               resolution="countries", width="100%", height="100%"))
   })
 
@@ -54,27 +56,38 @@ shinyServer(function(input, output){
   
   #### Graphs Tab ######################################################
   ## Graphs and Histograms
-  output$hist <- renderGvis({
-    gvisHistogram(suicide_rates[,input$selected, drop=FALSE])
+  output$bar <- renderPlot({
+    gvisColumnChart(data = df1(), xvar = , yvar = , )
   })
   
-  output$lines <- renderPlot({
-    gvisColumnChart(suicide_rates[,input$selected, drop=FALSE])
+  output$line <- renderPlot({
+    gvisLineChart(df1(), xvar="country", yvar=c("suicides100","suicides"),
+                  options=list(
+                    title="Suicides",
+                    titleTextStyle="{color:'black', 
+                                           fontName:'Courier', 
+                                           fontSize:16}",                          
+                    vAxis="{gridlines:{color:'red', count:3}}",
+                    hAxis="{title:'Country', titleTextStyle:{color:'grey'}}",
+                    series="[{color:'blue', targetAxisIndex: 0}, 
+                             {color: 'light-blue',targetAxisIndex:1}]",
+                    vAxes="[{title:'Suicides (/100k)'}, {title:'Suicides'}]",
+                    legend="bottom",
+                    curveType="function",
+                    width=500,
+                    height=300)
+                  )
   })
-  # 
-  # output$hist <- renderPlot(
-  #   flights_delay() %>%
-  #     ggplot(aes(x = carrier, y = n)) +
-  #     geom_col(fill = "lightblue") +
-  #     ggtitle("Number of flights")
-  # )
   
-  # Bubble <- gvisBubbleChart(Fruits, idvar="Fruit", 
-  #                           xvar="Sales", yvar="Expenses",
-  #                           colorvar="Year", sizevar="Profit",
-  #                           options=list(
-  #                             hAxis='{minValue:75, maxValue:125}'))
-  # plot(Bubble)
+  output$hist <- renderPlot({
+    gvisHistogram(df1())
+  })
+  
+  # output$bubble <- renderGvis({
+  #   gvisBubbleChart(Fruits, idvar="Fruit",xvar="Sales", yvar="Expenses",
+  #                   colorvar="Year", sizevar="Profit",
+  #                   options=list(hAxis='{minValue:75, maxValue:125}'))
+  # })
 
   #### ML Tab ##########################################################
   

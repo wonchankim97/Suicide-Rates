@@ -18,7 +18,7 @@ shinyUI(
         tags$li(a(href = 'https://github.com/wonchankim97/Suicide-Rates',
                   img(src = 'github.png',title = "Github Repository", height = "19px")),
                 class = "dropdown")
-        ),
+      ),
       dashboardSidebar(
         sidebarUserPanel(
           "Wonchan Kim",
@@ -53,10 +53,8 @@ shinyUI(
                                                   "55-74" = "55-74 years", "75+" = "75+ years"),
                                    selected = c("5-14 years", "15-24 years", "25-34 years",
                                                 "35-54 years", "55-74 years","75+ years")),
-                      sliderInput("slider", label = h3("Year Range"), min = 1985, 
-                                  max = 2016, value = c(1985, 2016), sep = "")
-                      
-                    )
+                      sliderInput("slider", label = h3("Year Range"), min = 1985,
+                                  max = 2016, value = c(1985, 2016), sep = ""))
                   ),
                   fluidRow(
                     infoBoxOutput("minBox", width = 12)
@@ -64,7 +62,10 @@ shinyUI(
           ),
           tabItem(tabName = "graphs",
                   fluidRow(
-                    box(htmlOutput("lines"), height = 300),
+                    box(htmlOutput("bar"), height = 300),
+                    box(htmlOutput("hist"), height = 300)
+                  ),
+                  fluidRow(
                     box(htmlOutput("hist"), height = 300)
                   )
           ),
@@ -78,14 +79,6 @@ shinyUI(
                   fluidRow(box(DT::dataTableOutput("table"), width = 12))
           )
         )
-        
-        # optional element of allowing user to download data
-        # fluidRow(
-        #   column(12, downloadButton("downloadDataFromTable", "Download Table Data"))
-        # ),
-        # fluidRow(
-        #   column(12, DT::dataTableOutput("campaign_table", width = "100%"))
-        # )
         
       )
     )
