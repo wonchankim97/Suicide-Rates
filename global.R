@@ -12,10 +12,10 @@ df = df %>%
                             origin = "country.name",
                             destination = "continent"))
 
-
-us = df %>% filter(country == 'United States')
-eu = df %>% filter(continent == "Europe")
-cont = df %>% group_by(continent)
-age = df %>% group_by(age)
-gen = df %>% group_by(generation)
+# 
+# us = df %>% filter(country == 'United States')
+# eu = df %>% filter(continent == "Europe")
+# cont = df %>% group_by(continent)
+# age = df %>% group_by(age)
+# gen = df %>% group_by(generation)
 

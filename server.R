@@ -57,39 +57,33 @@ shinyServer(function(input, output){
   
   #### Graphs Tab ######################################################
   ## Graphs and Histograms
-  output$bar <- renderPlot({
-    gvisColumnChart(suicide_rates, xvar = suicides100, yvar = gdp.capita)
-  })
-  # ## Example
-  # 
-  # # Column <- gvisColumnChart(df)
-  # # plot(Column)
-  # # 
-  # # df=data.frame(country=c("US", "GB", "BR"),
-  # #               val1=c(10,13,14),
-  # #               val2=c(23,12,32))
-  output$line <- renderPlot({
-    gvisLineChart(df1(), xvar="country", yvar=c("suicides100","suicides"),
-                  options=list(
-                    title="Suicides",
-                    titleTextStyle="{color:'black', 
-                                           fontName:'Courier', 
-                                           fontSize:16}",                          
-                    vAxis="{gridlines:{color:'red', count:3}}",
-                    hAxis="{title:'Country', titleTextStyle:{color:'grey'}}",
-                    series="[{color:'blue', targetAxisIndex: 0}, 
-                             {color: 'light-blue',targetAxisIndex:1}]",
-                    vAxes="[{title:'Suicides (/100k)'}, {title:'Suicides'}]",
-                    legend="bottom",
-                    curveType="function",
-                    width=500,
-                    height=300)
-    )
+  # cont, sex, gdp, year
+  df2 <- reactive({
+    df2 = df %>%
+      filter(continent %in% input$cont) %>%
+      filter(sex == input$sex) %>% 
+      filter(gdp.capita %in% input$gdp) %>% 
+      filter(year == input$year)
   })
   
-  output$hist <- renderPlot({
-    gvisHistogram(df1())
-  })
+  # output$bar <- renderPlot(
+  #   gvisColumnChart(suicide_rates, xvar = suicides100, yvar = gdp.capita)
+  # )
+  output$line <- renderPlot(
+    # check by gdp.capita for each country in the eu of suicides per 100k by generation (density)
+    # ggplot(data,aes(x=value, fill=variable)) + geom_density(alpha=0.25)
+    df2() %>%
+      group_by(country) %>%
+      ggplot(aes(gdp.capita, suicides.per.100k)) +
+      geom_smooth(aes(color = country), alpha = 0.25) +
+      scale_fill_brewer(palette='Set2') +
+      theme_bw() # which countries or do we just facet wrap everything (no)
+  )
+  
+  output$hist <- renderPlot(
+    df1() %>% ggplot(aes(country, gdp.capita)) + geom_point()
+    # ggplot(df1()) + geom_smooth()
+  )
   # 
   # output$hist <- renderPlot(
   #   flights_delay() %>%
