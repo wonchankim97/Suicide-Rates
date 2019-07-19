@@ -64,8 +64,11 @@ shinyUI(
           ),
           tabItem(tabName = "graphs",
                   fluidRow(
-                    box(htmlOutput("lines"), height = 300),
+                    box(htmlOutput("bar"), height = 300),
                     box(htmlOutput("hist"), height = 300)
+                  ),
+                  fluidRow(
+                    box(htmlOutput("line"), height = 300)
                   )
           ),
           tabItem(tabName = "ml",
