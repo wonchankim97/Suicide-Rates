@@ -47,6 +47,10 @@ shinyUI(
                   fluidRow(
                     column(9, box(htmlOutput("map"), height = "auto", width = "auto")),
                     column(3,
+                      radioButtons("type", label = h3("Display map By: "),
+                                   choices = list("Suicides" = "suicides",
+                                                  "Suicides (/100k)" = "suicides100"),
+                                   selected = "suicides"),
                       checkboxGroupInput("checkGroup", label = h3("Filter by age group: "),
                                    choices = list("5-14 years", "15-24 years",
                                                   "25-34 years", "35-54 years",
@@ -81,11 +85,11 @@ shinyUI(
                     
                   ),
                   fluidRow(
-                    box(htmlOutput("bar"), height = 300),
-                    box(htmlOutput("hist"), height = 300)
+                    box(plotOutput("bar"), height = 420),
+                    box(plotOutput("hist"), height = 420)
                   ),
                   fluidRow(
-                    box(htmlOutput("line"), height = 300)
+                    box(plotOutput("line"), height = 420)
                   )
           ),
           tabItem(tabName = "ml",

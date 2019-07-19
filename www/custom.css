@@ -31,6 +31,15 @@
 	font-size: 14px;
 }
 
+.info-box:hover,
+.info-box:hover .info-box-icon {
+  background-color: #aaa !important;
+}
+.info-box:active,
+.info-box:active .info-box-icon {
+  background-color: #ccc !important;
+}
+
 .infobox {
     font-family: "Avenir";
 	font-size: 30em;

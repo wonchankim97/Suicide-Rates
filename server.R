@@ -13,7 +13,7 @@ shinyServer(function(input, output){
   df1 <- reactive({
     if(is.null(input$checkGroup)){
       df1 = df %>% 
-        filter(year %in% input$slider) %>%
+        filter(between(year, input$slider[1], input$slider[2])) %>%
         group_by(country, age) %>%
         summarise(suicides100 = round(mean(suicides.per.100k)),
                   suicides = round(mean(suicides)))
@@ -21,7 +21,7 @@ shinyServer(function(input, output){
     else{
       df1 = df %>%
         filter(age %in% input$checkGroup) %>%
-        filter(year %in% input$slider) %>% 
+        filter(between(year, input$slider[1], input$slider[2])) %>% 
         group_by(country, age) %>%
         summarise(suicides100 = round(mean(suicides.per.100k)),
                   suicides = round(mean(suicides)))
@@ -34,7 +34,8 @@ shinyServer(function(input, output){
   output$map <-renderGvis({
     gvisGeoChart(data = df1(), locationvar = "country", colorvar = "suicides100",
                  options = list(region="world", displayMode="auto",
-                                resolution="countries", width="100%", height="100%"))
+                                resolution="countries", width="100%", height="100%",
+                                colorAxis="{colors:['#6f92e6', '#f9897e']}"))
   })
 
   output$maxBox <- renderInfoBox({
@@ -45,7 +46,7 @@ shinyServer(function(input, output){
   })
   output$avgBox <- renderInfoBox({
     avg_value <- round(mean(df1()$suicides100), 2)
-    infoBox("Average Global Suicides: ", avg_value, icon = icon("calculator"), color = "light-blue")
+    infoBox("Average Global Suicides ", avg_value, icon = icon("calculator"), color = "light-blue")
   })
   output$minBox <- renderInfoBox({
     min_state <-
@@ -60,30 +61,36 @@ shinyServer(function(input, output){
   # cont, sex, gdp, year
   df2 <- reactive({
     df2 = df %>%
-      filter(continent %in% input$cont) %>%
+      filter(continent == input$cont) %>%
       filter(sex == input$sex) %>% 
-      filter(gdp.capita %in% input$gdp) %>% 
-      filter(year == input$year)
+      filter(between(gdp.capita, input$gdp[1], input$gdp[2])) %>% 
+      filter(between(year, input$year[1], input$year[2]))
   })
   
-  # output$bar <- renderPlot(
-  #   gvisColumnChart(suicide_rates, xvar = suicides100, yvar = gdp.capita)
-  # )
+  output$bar <- renderPlot(
+    df2() %>%
+      ggplot() +
+      geom_point(aes(population, suicides))
+  )
+  
+  output$hist <- renderPlot(
+    df2() %>% 
+      ggplot(aes(country, gdp.capita)) + 
+      geom_point()
+    # ggplot(df1()) + geom_smooth()
+  )
+  
   output$line <- renderPlot(
     # check by gdp.capita for each country in the eu of suicides per 100k by generation (density)
     # ggplot(data,aes(x=value, fill=variable)) + geom_density(alpha=0.25)
     df2() %>%
       group_by(country) %>%
       ggplot(aes(gdp.capita, suicides.per.100k)) +
-      geom_smooth(aes(color = country), alpha = 0.25) +
+      geom_smooth(aes(color = country), alpha = 0.25, se = FALSE) +
       scale_fill_brewer(palette='Set2') +
       theme_bw() # which countries or do we just facet wrap everything (no)
   )
   
-  output$hist <- renderPlot(
-    df1() %>% ggplot(aes(country, gdp.capita)) + geom_point()
-    # ggplot(df1()) + geom_smooth()
-  )
   # 
   # output$hist <- renderPlot(
   #   flights_delay() %>%
