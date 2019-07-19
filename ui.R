@@ -28,7 +28,7 @@ shinyUI(
         sidebarMenu(
           menuItem(text = 'Maps', icon = icon('globe'), tabName = 'maps'),
           menuItem(text = 'Graphs', icon = icon('chart-bar'), tabName = 'graphs'),
-          menuItem(text = 'Machine Learning', icon = icon('laptop-code'), tabName = 'kmeans'),
+          menuItem(text = 'Machine Learning', icon = icon('laptop-code'), tabName = 'ml'),
           menuItem(text = 'Data', icon = icon('database'), tabName = 'data')
         )
       ),
@@ -43,17 +43,39 @@ shinyUI(
                            infoBoxOutput("minBox"),
                            infoBoxOutput("avgBox")),
                   fluidRow(
-                    column(9, box(htmlOutput("map"), height = 500,width=1000)),
+                    column(9, box(htmlOutput("map"), height = 500, width=1000)),
                     column(3,
                       checkboxGroupInput("checkGroup", label = h3("Filter by age group: "),
-                                                  choices = check[[1]],
-                                                  selected = check[[1]])
-                      
+                                   choices = list("5-14" = "5-14", "15-24" = "15-24",
+                                                  "25-34" = "25-34", "35-54" = "35-54",
+                                                  "55-74" = "55-74", "75+" = "75+"),
+                                   selected = c("5-14", "15-24", "25-34" = "25-34",
+                                                "35-54", "55-74","75+"))
                     )
+                  ),
+                  fluidRow(
+                    column(9,
+                           sliderInput("slider", label = h3("Year Range"), min = 1985, 
+                                       max = 2016, value = c(1985, 2016))
+                    ),
+                    column(3)
+                  )
+          ),
+          tabItem(tabName = "graphs",
+                  fluidRow(
+                    box(htmlOutput("lines"), height = 300),
+                    box(htmlOutput("hist"), height = 300)
+                  )
+          ),
+          tabItem(tabName = "ml",
+                  fluidRow(
+                    column(6),
+                    column(6)
                   )
           ),
           tabItem(tabName = "data",
-                  fluidRow(box(DT::dataTableOutput("table"), width = 12)))
+                  fluidRow(box(DT::dataTableOutput("table"), width = 12))
+          )
         )
         
         # optional element of allowing user to download data

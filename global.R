@@ -25,5 +25,9 @@ check =
   select(age) %>% 
   unique()
 
-check[[1]]
+us = df %>% filter(country == 'United States')
+eu = df %>% filter(continent == "Europe")
+cont = df %>% group_by(continent)
+age = df %>% group_by(age)
+gen = df %>% group_by(generation)
 
