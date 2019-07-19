@@ -60,22 +60,22 @@ shinyServer(function(input, output){
   ## Graphs and Histograms
   # cont, sex, gdp, year
   df2 <- reactive({
-    df2 = df %>%
+    df %>% 
       filter(continent == input$cont) %>%
-      filter(sex == input$sex) %>% 
-      filter(between(gdp.capita, input$gdp[1], input$gdp[2])) %>% 
+      filter(sex == input$sex) %>%
+      filter(between(gdp.capita, input$gdp[1], input$gdp[2])) %>%
       filter(between(year, input$year[1], input$year[2]))
   })
   
   output$bar <- renderPlot(
     df2() %>%
       ggplot() +
-      geom_point(aes(population, suicides))
+      geom_point(aes(x= population, y= suicides))
   )
   
   output$hist <- renderPlot(
     df2() %>% 
-      ggplot(aes(country, gdp.capita)) + 
+      ggplot(aes(x= country, y= gdp.capita)) + 
       geom_point()
     # ggplot(df1()) + geom_smooth()
   )
@@ -85,7 +85,7 @@ shinyServer(function(input, output){
     # ggplot(data,aes(x=value, fill=variable)) + geom_density(alpha=0.25)
     df2() %>%
       group_by(country) %>%
-      ggplot(aes(gdp.capita, suicides.per.100k)) +
+      ggplot(aes(x=gdp.capita, y=suicides.per.100k)) +
       geom_smooth(aes(color = country), alpha = 0.25, se = FALSE) +
       scale_fill_brewer(palette='Set2') +
       theme_bw() # which countries or do we just facet wrap everything (no)

@@ -29,7 +29,8 @@ shinyUI(
           menuItem(text = 'Maps', icon = icon('globe'), tabName = 'maps'),
           menuItem(text = 'Graphs', icon = icon('chart-bar'), tabName = 'graphs'),
           menuItem(text = 'Machine Learning', icon = icon('laptop-code'), tabName = 'ml'),
-          menuItem(text = 'Data', icon = icon('database'), tabName = 'data')
+          menuItem(text = 'Data', icon = icon('database'), tabName = 'data'),
+          menuItem(text = '   r/oddlysatisfying', icon = icon('reddit'), tabName = 'gif')
         )
       ),
       dashboardBody(
@@ -47,7 +48,7 @@ shinyUI(
                   fluidRow(
                     column(9, box(htmlOutput("map"), height = "auto", width = "auto")),
                     column(3,
-                      radioButtons("type", label = h3("Display map By: "),
+                      radioButtons("type", label = h3("Display map by: "),
                                    choices = list("Suicides" = "suicides",
                                                   "Suicides (/100k)" = "suicides100"),
                                    selected = "suicides"),
@@ -75,7 +76,7 @@ shinyUI(
                                                  "Asia", "Europe", "Oceania"))),
                     column(3,
                       radioButtons("sex", label = h3("Sex"), 
-                                  choices = list("Female" = 0, "Male" = 1))),
+                                  choices = list("Female" = "female", "Male" = "male"))),
                     column(3,
                       sliderInput("gdp", label = h3("GDP Range"), min = 251, 
                                     max = 126352, value = c(251, 126352))),
