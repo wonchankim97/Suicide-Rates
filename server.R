@@ -114,19 +114,21 @@ shinyServer(function(input, output){
   })
   
   #### Reddit Tab ######################################################
-  output$reddit = renderImage(
-    df %>%
-      filter(country %in% c("United States", "Canada", "Australia", "Mexico", "South Korea")) %>% 
-      group_by(year,country) %>% 
-      summarise(suicides = sum(suicides), population = mean(population), gdp.capita = mean(gdp.capita)) %>% 
-      ggplot(aes(suicides, population, color = country, size = gdp.capita)) + 
-      geom_point(alpha = 0.7) +
-      theme_gdocs() +
-      labs(title = 'Year: {frame_time}', x = 'Suicides', y = 'Population') +
-      transition_time(as.integer(year)) +
-      view_follow(fixed_y = TRUE) +
-      shadow_wake(wake_length = 0.05, alpha = FALSE)
-  )
+  ## Shiny doesn't render images well so will just attach with tag
+  # output$reddit = renderImage(
+  #   df %>%
+  #     filter(country %in% c("United States", "Canada", "Australia", "Mexico", "South Korea")) %>% 
+  #     group_by(year,country) %>% 
+  #     summarise(suicides = sum(suicides), population = mean(population), gdp.capita = mean(gdp.capita)) %>% 
+  #     ggplot(aes(suicides, population, color = country, size = gdp.capita, shape = country)) + 
+  #     geom_point(alpha = 0.7) +
+  #     scale_shape_manual(values=c(0,1,2,5,6)) +
+  #     theme_gdocs() +
+  #     labs(title = 'Year: {frame_time}', x = 'Suicides', y = 'Population') +
+  #     transition_time(as.integer(year)) +
+  #     view_follow(fixed_y = TRUE) +
+  #     shadow_wake(wake_length = 0.05, alpha = FALSE)
+  # )
 })
 
 
