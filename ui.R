@@ -103,10 +103,10 @@ shinyUI(
           ),
           tabItem(tabName = "gif",
                   fluidRow(
-                    column(1),
-                    column(7, tags$img(src = "reddit.gif", height = 900, width = 800)),
-                    column(3, h3("Thank you for taking the time to look through this project :')",
-                                 align = "center"))
+                    column(8, tags$img(src = "reddit.gif", height = 900, width = 800)),
+                    column(4, 
+                           fluidRow(tags$img(src = "redditm.gif", height = 450, width = 400)),
+                           fluidRow(tags$img(src = "redditf.gif", height = 450, width = 400)))
                   )
           )
         )
