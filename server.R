@@ -4,6 +4,8 @@ library(googleVis)
 library(leaflet)
 library(maps)
 library(countrycode)
+library(plotly)
+library(ggthemes)
 
 
 
@@ -60,35 +62,42 @@ shinyServer(function(input, output){
   ## Graphs and Histograms
   # cont, sex, gdp, year
   df2 <- reactive({
-    df %>% 
+    df2 = df %>% 
       filter(continent == input$cont) %>%
       filter(sex == input$sex) %>%
       filter(between(gdp.capita, input$gdp[1], input$gdp[2])) %>%
-      filter(between(year, input$year[1], input$year[2]))
+      filter(between(year, input$year[1], input$year[2])) %>% 
+      arrange(desc(suicides))
   })
   
-  output$bar <- renderPlot(
-    df2() %>%
-      ggplot() +
-      geom_point(aes(x= population, y= suicides))
+  output$line <- renderPlotly(
+    # check by gdp.capita for each country in the eu of suicides per 100k by generation (density)
+    ggplotly(df2() %>%
+      group_by(country, year) %>%
+      summarise(suicides100 = mean(suicides.per.100k)) %>% 
+      ggplot(aes(year, suicides100)) +
+      geom_line(aes(color = country), show.legend = FALSE,
+                  alpha = 0.25) +
+      theme_gdocs()) %>% 
+      layout(legend = list(x = 100, y = 0.5))
   )
   
-  output$hist <- renderPlot(
-    df2() %>% 
-      ggplot(aes(x= country, y= gdp.capita)) + 
-      geom_point()
+  output$hist <- renderPlotly(
+    ggplotly(df2() %>% 
+      group_by(country, year) %>% 
+      ggplot(aes(year, gdp.capita)) + 
+      geom_col(aes(fill = country), position = "dodge") +
+      theme_gdocs())
     # ggplot(df1()) + geom_smooth()
   )
   
-  output$line <- renderPlot(
-    # check by gdp.capita for each country in the eu of suicides per 100k by generation (density)
-    # ggplot(data,aes(x=value, fill=variable)) + geom_density(alpha=0.25)
-    df2() %>%
-      group_by(country) %>%
-      ggplot(aes(x=gdp.capita, y=suicides.per.100k)) +
-      geom_smooth(aes(color = country), alpha = 0.25, se = FALSE) +
-      scale_fill_brewer(palette='Set2') +
-      theme_bw() # which countries or do we just facet wrap everything (no)
+  output$scat <- renderPlotly(
+    ggplotly(df2() %>%
+      group_by(country) %>% 
+      ggplot() +
+      geom_point(aes(x = population, y = suicides, size = population, color = country),
+                 show.legend = ) +
+      theme_gdocs())
   )
   
   # 

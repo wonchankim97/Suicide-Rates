@@ -86,11 +86,11 @@ shinyUI(
                     
                   ),
                   fluidRow(
-                    box(plotOutput("bar"), height = 420),
-                    box(plotOutput("hist"), height = 420)
+                    box(plotlyOutput("line"), height = 420),
+                    box(plotlyOutput("hist"), height = 420)
                   ),
                   fluidRow(
-                    box(plotOutput("line"), height = 420)
+                    box(plotlyOutput("scat"), height = 420, width = 12)
                   )
           ),
           tabItem(tabName = "ml",
