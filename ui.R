@@ -68,13 +68,13 @@ shinyUI(
                   )
           ),
           tabItem(tabName = "graphs",
-                  fluidRow(h1("Customize graphs using the following conditions:"), align = "center"),
                   fluidRow(
-                    column(3,
+                    column(2, h3("Filter graphs by:"), align = "center"),
+                    column(2,
                       selectInput("cont", label = h3("Continent"), 
                                   choices = list("Americas", "Africa",
                                                  "Asia", "Europe", "Oceania"))),
-                    column(3,
+                    column(2,
                       radioButtons("sex", label = h3("Sex"), 
                                   choices = list("Female" = "female", "Male" = "male"))),
                     column(3,
@@ -101,7 +101,9 @@ shinyUI(
           ),
           tabItem(tabName = "data",
                   fluidRow(box(DT::dataTableOutput("table"), width = 12))
-          )
+          ),
+          tabItem(tabName = "reddit",
+                  fluidRow())
         )
         
         # optional element of allowing user to download data

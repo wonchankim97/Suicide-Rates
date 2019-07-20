@@ -17,7 +17,7 @@ shinyServer(function(input, output){
       df1 = df %>% 
         filter(between(year, input$slider[1], input$slider[2])) %>%
         group_by(country, age) %>%
-        summarise(suicides100 = round(mean(suicides.per.100k)),
+        summarise(suicides100 = round(mean(input$type)),
                   suicides = round(mean(suicides)))
     }
     else{
@@ -25,8 +25,8 @@ shinyServer(function(input, output){
         filter(age %in% input$checkGroup) %>%
         filter(between(year, input$slider[1], input$slider[2])) %>% 
         group_by(country, age) %>%
-        summarise(suicides100 = round(mean(suicides.per.100k)),
-                  suicides = round(mean(suicides)))
+        summarise(suicides100 = sum(suicides.per.100k),
+                  suicides = sum(suicides))
     }
   })
   
@@ -34,7 +34,7 @@ shinyServer(function(input, output){
   ## Render Map
   # show map using googleVis
   output$map <-renderGvis({
-    gvisGeoChart(data = df1(), locationvar = "country", colorvar = "suicides100",
+    gvisGeoChart(data = df1(), locationvar = "country", colorvar = input$type,
                  options = list(region="world", displayMode="auto",
                                 resolution="countries", width="100%", height="100%",
                                 colorAxis="{colors:['#6f92e6', '#f9897e']}"))
@@ -42,13 +42,12 @@ shinyServer(function(input, output){
 
   output$maxBox <- renderInfoBox({
     max_value <- max(df1()$suicides100)
-    max_state <-
-      df1()$country[df1()$suicides100 == max_value]
+    max_state <- df1()$country[df1()$suicides100 == max_value]
     infoBox(max_state, max_value, icon = icon("hand-o-up"), color = "light-blue")
   })
   output$avgBox <- renderInfoBox({
     avg_value <- round(mean(df1()$suicides100), 2)
-    infoBox("Average Global Suicides ", avg_value, icon = icon("calculator"), color = "light-blue")
+    infoBox("Average Global Suicides (/100k)", avg_value, icon = icon("calculator"), color = "light-blue")
   })
   output$minBox <- renderInfoBox({
     min_state <-
@@ -78,6 +77,7 @@ shinyServer(function(input, output){
       ggplot(aes(year, suicides100)) +
       geom_line(aes(color = country), show.legend = FALSE,
                   alpha = 0.25) +
+      labs(title = "Suicides (/100k) vs. Year", x = "Year", y = "Suicides (/100k)") +
       theme_gdocs()) %>% 
       layout(legend = list(x = 100, y = 0.5))
   )
@@ -87,17 +87,19 @@ shinyServer(function(input, output){
       group_by(country, year) %>% 
       ggplot(aes(year, gdp.capita)) + 
       geom_col(aes(fill = country), position = "dodge") +
-      theme_gdocs())
+      theme_gdocs() +
+      labs(title = "GDP per Capita vs. Year", x = "Year", y = "GDP per Capita"))
     # ggplot(df1()) + geom_smooth()
   )
   
   output$scat <- renderPlotly(
     ggplotly(df2() %>%
-      group_by(country) %>% 
+      group_by(country, year) %>% 
       ggplot() +
       geom_point(aes(x = population, y = suicides, size = population, color = country),
-                 show.legend = ) +
-      theme_gdocs())
+                 show.legend = FALSE, alpha = 0.25) +
+      theme_gdocs() +
+      labs(title = "Suicides vs. Population", x = "Population", y = "Suicides"))
   )
   
   # 

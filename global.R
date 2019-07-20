@@ -7,9 +7,11 @@ df  =
          gdp.capita = `gdp_per_capita ($)`,
          gdp.year = `gdp_for_year ($)`,
          suicides = suicides_no)
+  
 df = df %>% 
   mutate(continent = countrycode(sourcevar = df$country,
                             origin = "country.name",
-                            destination = "continent"))
+                            destination = "continent"),
+         country = ifelse(country == "Republic of Korea", "South Korea", country))
 
 
