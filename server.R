@@ -1,11 +1,11 @@
 library(shinydashboard)
 library(tidyverse)
 library(googleVis)
-library(leaflet)
 library(maps)
 library(countrycode)
 library(plotly)
 library(ggthemes)
+library(gganimate)
 
 
 
@@ -113,6 +113,20 @@ shinyServer(function(input, output){
     suicide_rates
   })
   
+  #### Reddit Tab ######################################################
+  output$reddit = renderImage(
+    df %>%
+      filter(country %in% c("United States", "Canada", "Australia", "Mexico", "South Korea")) %>% 
+      group_by(year,country) %>% 
+      summarise(suicides = sum(suicides), population = mean(population), gdp.capita = mean(gdp.capita)) %>% 
+      ggplot(aes(suicides, population, color = country, size = gdp.capita)) + 
+      geom_point(alpha = 0.7) +
+      theme_gdocs() +
+      labs(title = 'Year: {frame_time}', x = 'Suicides', y = 'Population') +
+      transition_time(as.integer(year)) +
+      view_follow(fixed_y = TRUE) +
+      shadow_wake(wake_length = 0.05, alpha = FALSE)
+  )
 })
 
 

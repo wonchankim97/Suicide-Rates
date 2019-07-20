@@ -1,6 +1,5 @@
 library(shiny)
 library(shinydashboard)
-library(tidyverse)
 
 shinyUI(
   fluidPage(
@@ -102,17 +101,15 @@ shinyUI(
           tabItem(tabName = "data",
                   fluidRow(box(DT::dataTableOutput("table"), width = 12))
           ),
-          tabItem(tabName = "reddit",
-                  fluidRow())
+          tabItem(tabName = "gif",
+                  fluidRow(
+                    column(1),
+                    column(7, tags$img(src = "reddit.gif", height = 900, width = 800)),
+                    column(3, h3("Thank you for taking the time to look through this project :')",
+                                 align = "center"))
+                  )
+          )
         )
-        
-        # optional element of allowing user to download data
-        # fluidRow(
-        #   column(12, downloadButton("downloadDataFromTable", "Download Table Data"))
-        # ),
-        # fluidRow(
-        #   column(12, DT::dataTableOutput("campaign_table", width = "100%"))
-        # )
         
       )
     )
