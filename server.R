@@ -17,8 +17,8 @@ shinyServer(function(input, output){
       df1 = df %>% 
         filter(between(year, input$slider[1], input$slider[2])) %>%
         group_by(country, age) %>%
-        summarise(suicides100 = round(mean(input$type)),
-                  suicides = round(mean(suicides)))
+        summarise(suicides100 = sum(suicides.per.100k),
+                  suicides = sum(suicides))
     }
     else{
       df1 = df %>%
@@ -105,6 +105,7 @@ shinyServer(function(input, output){
   )
 
   #### ML Tab ##########################################################
+  ## reactive function for the kmeans?
   
   
   #### Table Tab #######################################################
