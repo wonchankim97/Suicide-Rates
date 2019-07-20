@@ -106,7 +106,52 @@ shinyServer(function(input, output){
 
   #### ML Tab ##########################################################
   ## reactive function for the kmeans?
+  # Combine the selected variables into a new data frame
+  selectedData <- reactive({
+    df3[, c(input$xcol, input$ycol)]
+  })
   
+  clusters <- reactive({
+    kmeans(selectedData(), input$clusters)
+  })
+  
+  output$plot1 <- renderPlotly({
+    vcol = (c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
+              "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
+    
+    ggplotly(ggplot(selectedData(), aes(x = selectedData()[[1]], y = selectedData()[[2]],
+                     col = vcol[clusters()$cluster])) +
+      geom_point(alpha = 0.5, show.legend = FALSE) +
+      theme_gdocs() +
+      scale_fill_manual("Clusters") +
+      labs(title = "K Means Clustering", x = as.character(input$xcol), y = as.character(input$ycol))) %>% 
+      layout(showlegend = FALSE)
+    
+    # par(mar = c(5.1, 4.1, 0, 1))
+    # plot(selectedData(),
+    #      col = c(clusters()$cluster),
+    #      pch = 20, cex = 1.5)
+    # points(clusters()$centers, pch = 4, cex = 4, lwd = 4)
+  })
+  
+  output$plot2 <- renderPlotly(
+    ggplotly(ggplot(selectedData(), aes(x = selectedData()[[1]], y = selectedData()[[2]],
+                               col = df3$country)) +
+      geom_point(alpha = 0.5) +
+      theme_gdocs() +
+      labs(title = "Original Data", x = as.character(input$xcol), y = as.character(input$ycol)))
+  )
+  
+  output$scat <- renderPlotly(
+    ggplotly(df2() %>%
+               group_by(country) %>% 
+               summarise(population = mean(population), suicides = sum(suicides)) %>% 
+               ggplot() +
+               geom_point(aes(x = population, y = suicides, size = population, color = country),
+                          show.legend = FALSE, alpha = 0.5) +
+               theme_gdocs() +
+               labs(title = "Suicides vs. Population", x = "Population", y = "Suicides"))
+  )
   
   #### Table Tab #######################################################
   ## Render Data Table with Filtering Options
@@ -130,6 +175,29 @@ shinyServer(function(input, output){
   #     view_follow(fixed_y = TRUE) +
   #     shadow_wake(wake_length = 0.05, alpha = FALSE)
   # )
+  # 
+  # df %>%
+  #   filter(country == "United States", sex == "male") %>%
+  #   group_by(year, country) %>%
+  #   summarise(suicides = sum(suicides), population = mean(population), gdp.capita = mean(gdp.capita)) %>%
+  #   ggplot(aes(suicides, population, color = country, size = gdp.capita, shape = country)) +
+  #   geom_point(alpha = 0.7, show.legend = FALSE) +
+  #   theme_gdocs() +
+  #   scale_color_manual(values="#56B4E9") +
+  #   labs(title = 'United States Males Year: {frame_time}', x = 'Suicides', y = 'Population') +
+  #   transition_time(as.integer(year)) +
+  #   shadow_wake(wake_length = 0.05, alpha = FALSE)
+  # 
+  # df %>%
+  #   filter(country == "United States", sex == "female") %>%
+  #   group_by(year, country) %>%
+  #   summarise(suicides = sum(suicides), population = mean(population), gdp.capita = mean(gdp.capita)) %>%
+  #   ggplot(aes(suicides, population, color = country, size = gdp.capita, shape = country)) +
+  #   geom_point(alpha = 0.7, show.legend = FALSE) +
+  #   theme_gdocs() +
+  #   labs(title = 'United States Females Year: {frame_time}', x = 'Suicides', y = 'Population') +
+  #   transition_time(as.integer(year)) +
+  #   shadow_wake(wake_length = 0.05, alpha = FALSE)
 })
 
 

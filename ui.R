@@ -94,8 +94,21 @@ shinyUI(
           ),
           tabItem(tabName = "ml",
                   fluidRow(
-                    column(6),
-                    column(6)
+                    column(9,
+                      fluidRow(
+                        box(plotlyOutput('plot1'), height = 420),
+                        box(plotlyOutput('plot2'), height = 420))
+                      ),
+                    column(3,
+                           selectInput('xcol', 'X Variable',
+                                       choices = list("suicides", "population",
+                                            "suicides.per.100k", "gdp.capita")),
+                           selectInput('ycol', 'Y Variable',
+                                       choices = list("suicides", "population",
+                                            "suicides.per.100k", "gdp.capita"),
+                                       selected = "population"),
+                           numericInput('clusters', 'Cluster count', 5,
+                                        min = 1, max = 9))
                   )
           ),
           tabItem(tabName = "data",
@@ -103,10 +116,10 @@ shinyUI(
           ),
           tabItem(tabName = "gif",
                   fluidRow(
-                    column(8, tags$img(src = "reddit.gif", height = 900, width = 800)),
+                    column(8, tags$img(src = "reddit.gif", height = 1000, width = 970)),
                     column(4, 
-                           fluidRow(tags$img(src = "redditm.gif", height = 450, width = 400)),
-                           fluidRow(tags$img(src = "redditf.gif", height = 450, width = 400)))
+                           fluidRow(tags$img(src = "redditm.gif", height = 500, width = 490)),
+                           fluidRow(tags$img(src = "redditf.gif", height = 500, width = 490)))
                   )
           )
         )

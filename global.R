@@ -14,4 +14,10 @@ df = df %>%
                             destination = "continent"),
          country = ifelse(country == "Republic of Korea", "South Korea", country))
 
+df3 = df %>%
+  filter(country %in% c("United States", "Canada", "Australia", "Mexico", "South Korea")) %>% 
+  select(-hdi, -age, -continent, -gdp.year, -sex) %>% 
+  select(-generation, -year)
+
+## explore the years (wars, etc.)
 
