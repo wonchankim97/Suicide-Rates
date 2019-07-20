@@ -72,12 +72,13 @@ shinyServer(function(input, output){
   output$line <- renderPlotly(
     # check by gdp.capita for each country in the eu of suicides per 100k by generation (density)
     ggplotly(df2() %>%
-      group_by(country, year) %>%
+      group_by(country, year) %>% 
       summarise(suicides100 = mean(suicides.per.100k)) %>% 
       ggplot(aes(year, suicides100)) +
       geom_line(aes(color = country), show.legend = FALSE,
                   alpha = 0.25) +
       labs(title = "Suicides (/100k) vs. Year", x = "Year", y = "Suicides (/100k)") +
+      scale_y_continuous(labels = function(x) sprintf("%.2f", x)) +
       theme_gdocs()) %>% 
       layout(legend = list(x = 100, y = 0.5))
   )
@@ -94,28 +95,14 @@ shinyServer(function(input, output){
   
   output$scat <- renderPlotly(
     ggplotly(df2() %>%
-      group_by(country, year) %>% 
+      group_by(country) %>% 
+      summarise(population = mean(population), suicides = sum(suicides)) %>% 
       ggplot() +
       geom_point(aes(x = population, y = suicides, size = population, color = country),
-                 show.legend = FALSE, alpha = 0.25) +
+                 show.legend = FALSE, alpha = 0.5) +
       theme_gdocs() +
       labs(title = "Suicides vs. Population", x = "Population", y = "Suicides"))
   )
-  
-  # 
-  # output$hist <- renderPlot(
-  #   flights_delay() %>%
-  #     ggplot(aes(x = carrier, y = n)) +
-  #     geom_col(fill = "lightblue") +
-  #     ggtitle("Number of flights")
-  # )
-  
-  # Bubble <- gvisBubbleChart(Fruits, idvar="Fruit", 
-  #                           xvar="Sales", yvar="Expenses",
-  #                           colorvar="Year", sizevar="Profit",
-  #                           options=list(
-  #                             hAxis='{minValue:75, maxValue:125}'))
-  # plot(Bubble)
 
   #### ML Tab ##########################################################
   
