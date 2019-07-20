@@ -1,3 +1,13 @@
+library(shiny)
+library(shinydashboard)
+library(tidyverse)
+library(googleVis)
+library(maps)
+library(countrycode)
+library(plotly)
+library(ggthemes)
+library(gganimate)
+
 suicide_rates <- read_csv(file = "../suicide_rates/suicide_rates.csv")
 df  =
   suicide_rates %>%

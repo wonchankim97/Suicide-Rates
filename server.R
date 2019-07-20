@@ -1,14 +1,3 @@
-library(shinydashboard)
-library(tidyverse)
-library(googleVis)
-library(maps)
-library(countrycode)
-library(plotly)
-library(ggthemes)
-library(gganimate)
-
-
-
 shinyServer(function(input, output){
   #### Map Tab #########################################################
   ## Filter
