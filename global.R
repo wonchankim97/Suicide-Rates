@@ -8,7 +8,7 @@ library(plotly)
 library(ggthemes)
 library(gganimate)
 
-suicide_rates <- read_csv(file = "../suicide_rates/suicide_rates.csv")
+suicide_rates <- read_csv(file = "./suicide_rates.csv")
 df  =
   suicide_rates %>%
   select(-`country-year`) %>% 
