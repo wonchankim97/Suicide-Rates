@@ -10,6 +10,6 @@ In the server file of this app, I had to make sure that everything in my UI side
 
 ## Future Improvements
 To improve upon this project, there are several points I want to address.
--In each tab, I would like to put an extra page tab to describe what exactly the use of my graphs, maps, etc. are and how the user should toggle with the inputs in order to maximize their understanding of the web app in order to draw more significant conclusions.
--I would like to do the k means clustering once over but by segmenting the dataset into different groups or by standardizing some of the values.
+⋅⋅*In each tab, I would like to put an extra page tab to describe what exactly the use of my graphs, maps, etc. are and how the user should toggle with the inputs in order to maximize their understanding of the web app in order to draw more significant conclusions.
+⋅⋅*I would like to do the k means clustering once over but by segmenting the dataset into different groups or by standardizing some of the values.
 
